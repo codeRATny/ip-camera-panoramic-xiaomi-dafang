@@ -32,5 +32,3 @@ daemon_motor.o: daemon_motor.c
 
 daemon_motor: daemon_motor.o
 	$(CC) $(LDFLAG) -o bin/daemon_motor obj/daemon_motor.o -lrt -lm
-
-

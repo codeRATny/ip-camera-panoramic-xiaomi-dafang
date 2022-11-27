@@ -3,3 +3,4 @@
 /toolchain
 *.o
 bin/*
+/toolchain
