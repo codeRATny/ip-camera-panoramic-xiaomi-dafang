@@ -20,8 +20,8 @@ LDFLAG += -Wl,-gc-sections
 
 all: 	$(BINS)
 
-$(BINS): $(OBJECTS)
-	$(CPLUSPLUS) $(LDFLAG) -o $@ $< $(LIBS)
+$(BIN_PATH)/%: $(OBJ_PATH)/%.o
+	$(CPLUSPLUS) $(LDFLAG) -o $@ $< $(LIBS) -lrt
 	$(STRIP) $@
 
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c

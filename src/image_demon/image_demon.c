@@ -5,6 +5,9 @@
 #include <netinet/in.h>
 #include <string.h>
 #include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include "head_motor.h"
 
 int main(){
     // Create socket for incoming connections
@@ -57,7 +60,44 @@ int main(){
 
         // Пишем в mqueue команду демону мотора повернуться до упора влево
 
+        mqd_t pic2motor_queue = mq_open(PIC2MOTOR_QUEUE, O_WRONLY | O_CREAT, S_IWUSR, &attributes_for_motor_queue);
+        if(pic2motor_queue==-1){
+            perror("mq_open pic2motor");
+            return -1;
+        }
+
+        mqd_t motor2pic_queue = mq_open(MOTOR2PIC_QUEUE, O_RDONLY | O_CREAT, S_IWUSR, &attributes_for_motor_queue);
+        if(pic2motor_queue==-1){
+            perror("mq_open pic2motor");
+            return -1;
+        }
+
+        motor_action_t action = CAM2MOTOR_ACTION_STEP;
+
+        if(mq_send(pic2motor_queue, (const char*)&action, sizeof(action), PRIORITY_OF_QUEUE)==-1){
+            perror("mq_send to motor");
+            return -1;
+        }
+
         // Ждем подтверждения
+
+        if(mq_receive(motor2pic_queue,(char*)&action,sizeof(action),NULL)==-1){
+            perror("mq_receive from motor");
+            return -1;
+        }
+
+        switch (action)
+        {
+        case CAM2MOTOR_ACTION_END_OF_ENUM:
+            printf("End of path reached\n");
+            break;
+        case CAM2MOTOR_ACTION_STEP:
+            printf("Step\n");
+            break;
+        case CAM2MOTOR_ACTION_INVALID_TYPE:
+            printf("Motor error\n");
+            break;
+        }
 
         // Делаем фотку, вырезаем столбец пикселей
 
@@ -67,6 +107,8 @@ int main(){
 
         // Если дошли до упора, кодируем в JPEG и отправляем телеграм боту, иначе делаем фотку и так по кругу
 
+        mq_close(pic2motor_queue);
+        mq_close(motor2pic_queue);
         close(client_fd);
     }
     close(camera_fd);

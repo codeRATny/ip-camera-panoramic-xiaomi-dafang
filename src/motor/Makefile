@@ -1,5 +1,3 @@
-TOOLCHAIN = $(pwd)../toolchain/bin
-CROSS_COMPILE = $(TOOLCHAIN)/mips-linux-gnu-
 CC = $(CROSS_COMPILE)gcc
 LD = $(CROSS_COMPILE)ld
 AR = $(CROSS_COMPILE)ar rc
