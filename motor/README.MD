@@ -1,8 +1,10 @@
-Пока не доделал мейк компилировать так:  
-  
-toolchain/bin/mips-linux-gnu-gcc -c libcontrol_motor.c  -lrt -lm  
-ar rc libmotor_daemon_api.a libcontrol_motor.o  
-make motor_app  
-make api_motor_mq  
+daemon_motor имеет 2 режима работы:  
+-d в режиме демона;  
+-i в интерактивном режиме;  
+
+api_motor_mq:
+-калибровка;
+-шаг и кол-во шагов;
+-конец работы с камерой. закрытие очередей и завершение демона.
 
 спасибо за внимание.
