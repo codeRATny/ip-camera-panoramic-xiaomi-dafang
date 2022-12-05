@@ -1,3 +1,6 @@
 /motor/sample_motor
 /motor/toolchain
 /toolchain
+*.o
+bin/*
+/toolchain
