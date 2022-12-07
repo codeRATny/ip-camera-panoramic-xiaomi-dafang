@@ -11,9 +11,9 @@
 #include "motor_daemon.h"
 #include "motor_daemon_api.h"
 
-//#define DEBUG
+// #define DEBUG
 #ifdef DEBUG
-#define PRINT_DEBUG(...) printf(##__VA_ARGS__)
+#define PRINT_DEBUG(...) printf(__VA_ARGS__)
 #else
 #define PRINT_DEBUG(...)
 #endif
@@ -88,8 +88,8 @@ void receive_motor2pic_reply(motor2pic_t *to_receive)
             sleep(3);
             continue;
         }
-        PRINT_DEBUG("я принял сообщение №%d от действия %d\nРазмер полученного сообщения: %ld\n", \
-                    to_receive->number_of_comand_m2p, to_receive->action_m2p, sizeof(size_receive));
+        PRINT_DEBUG("я принял сообщение №%d от действия %d\nРазмер полученного сообщения: %d\n", \
+                    to_receive->number_of_comand_m2p, to_receive->action_m2p, size_receive);
         printf("Текущее положение мотора: %d\n", to_receive->motor_status);
         break;
     }
@@ -103,7 +103,7 @@ void goodbye_motor()
     send_motor2pic_request(&goodbye);
 }
 
-void calibration()
+int calibration()
 {
     PRINT_DEBUG(__FUNCTION__);
     pic2motor_t calibration_p2m = {0};
@@ -117,24 +117,24 @@ void calibration()
     {
         printf("Мотор ответил не на то событие\nНомер отправленного: %d\nНомер полученного: %d\n", \
                calibration_p2m.action_p2m, calibration_m2p.action_m2p);
+        return CAM2MOTOR_ACTION_INVALID_TYPE;
     }
     if (calibration_p2m.number_of_comand_p2m != calibration_m2p.number_of_comand_m2p)
     {
         printf("Мотор ответил не на то сообщение\nНомер отправленного: %d\nНомер полученного: %d\n", \
                calibration_p2m.number_of_comand_p2m, calibration_m2p.number_of_comand_m2p);
+        return CAM2MOTOR_ACTION_INVALID_TYPE;
     }
     if (calibration_m2p.action_m2p == CAM2MOTOR_ACTION_INVALID_TYPE)
     {
         printf("Какие-то проблемы с калибровкой\n");
+        return CAM2MOTOR_ACTION_INVALID_TYPE;
     }
+    return 0;
 }
 
-void step(int number_of_steps)
+int step(int number_of_steps)
 {
-    #ifdef DEBUG
-    here_are_am(__FUNCTION__);
-    #endif
-
     pic2motor_t step_p2m = {0};
     step_p2m.action_p2m = CAM2MOTOR_ACTION_STEP;
     step_p2m.make_steps = number_of_steps;
@@ -146,16 +146,20 @@ void step(int number_of_steps)
     {
         printf("Мотор дошел до конца\nНомер отправленного: %d\nНомер полученного: %d\n", \
                step_p2m.action_p2m, step_m2p.action_m2p);
+        return CAM2MOTOR_ACTION_END_OF_ENUM;
     }
     if (step_p2m.number_of_comand_p2m != step_m2p.number_of_comand_m2p)
     {
         printf("Мотор ответил не на то сообщение\nНомер отправленного: %d\nНомер полученного: %d\n", \
                step_p2m.number_of_comand_p2m, step_m2p.number_of_comand_m2p);
+        return CAM2MOTOR_ACTION_INVALID_TYPE;
     }
     if (step_m2p.action_m2p == CAM2MOTOR_ACTION_INVALID_TYPE)
     {
         printf("Какие-то проблемы с шагом\n");
+        return CAM2MOTOR_ACTION_INVALID_TYPE;
     }
+    return 0;
 }
 
 void init_contol_motor()

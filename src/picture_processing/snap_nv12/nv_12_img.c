@@ -94,17 +94,9 @@ int sample_system_exit()
     return 0;
 }
 
-int snap_yuv_nv21(uint8_t **img)
+int snap_yuv_nv21_init()
 {
-    IMPFrameInfo *frame_bak;
     IMPFSChnAttr fs_chn_attr[2];
-
-    if (*img == NULL)
-    {
-        printf("NULL pointer\n");
-        return -1;
-    }
-
     CHECK_RET(sample_system_init(), "IMP_System_Init() failed\n");
 
     if (chn.enable)
@@ -127,20 +119,38 @@ int snap_yuv_nv21(uint8_t **img)
 
     CHECK_RET(IMP_FrameSource_SetFrameDepth(0, 1), "IMP_FrameSource_SetFrameDepth failed\n");
 
-    int m = 0;
+    return 0;
+}
 
-    for (m = 1; m <= 51; m++)
+int snap_yuv_nv21(uint8_t **img)
+{
+    IMPFrameInfo *frame_bak;
+
+    if (*img == NULL)
     {
-        CHECK_RET(IMP_FrameSource_GetFrame(0, &frame_bak), "IMP_FrameSource_GetFrame failed\n");
-
-        if (m % 50 == 0)
-        {
-            memcpy(*img, (void *)frame_bak->virAddr, frame_bak->size);
-        }
-
-        CHECK_RET(IMP_FrameSource_ReleaseFrame(0, frame_bak), "IMP_FrameSource_ReleaseFrame failed\n");
+        printf("NULL pointer\n");
+        return -1;
     }
 
+    // int m = 0;
+
+    // for (m = 1; m <= 51; m++)
+    // {
+        CHECK_RET(IMP_FrameSource_GetFrame(0, &frame_bak), "IMP_FrameSource_GetFrame failed\n");
+
+        // if (m % 50 == 0)
+        // {
+            memcpy(*img, (void *)frame_bak->virAddr, frame_bak->size);
+        // }
+// 
+        CHECK_RET(IMP_FrameSource_ReleaseFrame(0, frame_bak), "IMP_FrameSource_ReleaseFrame failed\n");
+    // }
+
+    return 0;
+}
+
+int snap_yuv_nv21_exit()
+{
     CHECK_RET(IMP_FrameSource_SetFrameDepth(0, 0), "IMP_FrameSource_SetFrameDepth failed\n");
 
     if (chn.enable)

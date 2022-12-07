@@ -1,14 +1,12 @@
 #ifndef HEAD_MOTOR_H
 #define HEAD_MOTOR_H
 
-#include <mqueue.h>
-
 #define PIC2MOTOR_QUEUE "/Queue_pic2motor"
 #define MOTOR2PIC_QUEUE "/Queue_motor2pic"
 #define MQ_MAX_NUM_OF_MESSAGES 10
 #define PRIORITY_OF_QUEUE 1
 #define SIZE_OF_MESSAGE 128
-#define LIMIT_STEP 2600
+#define LIMIT_STEP 1300
 
 typedef enum _motor_action_e
 {

@@ -18,7 +18,7 @@ uint8_t *make_panorama_rgb24(int img_width, int img_height, int steps, int pixel
 
     // FOR E.G.
     int fd_img_in;
-    fd_img_in = open("true.raw", O_RDONLY);
+    fd_img_in = open("1.raw", O_RDONLY);
     read(fd_img_in, buf, img_width * img_height * PIXEL_SIZE);
 
     for (int img_counter = 0; img_counter < steps; img_counter++)
@@ -27,7 +27,7 @@ uint8_t *make_panorama_rgb24(int img_width, int img_height, int steps, int pixel
         int offset_idx = 0;
 
         // get new image here
-        snap_yuv_nv21(&buf);
+        // snap_yuv_nv21(&buf);
         for (int row = 0; row < img_height; row++)
         {
             for (int col = 0; col < PIXEL_SIZE * pixel_cols; col++)

@@ -20,16 +20,16 @@ BIN_DIR = ../../../bin/picture_processing
 SRC_DIR = .
 LDFLAG += -Wl,-gc-sections
 
-all: snap_pic_nv12
+all: concat
 
-snap_pic_nv12: nv_12_img.o snap_pic_nv12.o nv_12_img.h
+concat: img_concat.o concat.o img_concat.h
 	$(CC) -o $@ $^ $(LDFLAG) $(CFLAGS) $(LIBS) -lpthread -lm -lrt -static
 	$(STRIP) $@
 
-nv_12_img.o: nv_12_img.c nv_12_img.h
-	$(CC) -c nv_12_img.c $(CFLAGS) -o nv_12_img.o
+img_concat.o: img_concat.c img_concat.h
+	$(CC) -std=c99 -c img_concat.c $(CFLAGS) -o img_concat.o
 
-snap_pic_nv12.o: snap_pic_nv12.c nv_12_img.h
+concat.o: concat.c img_concat.h
 	$(CC) -c $(CFLAGS) $< -o $@
 
 clean:

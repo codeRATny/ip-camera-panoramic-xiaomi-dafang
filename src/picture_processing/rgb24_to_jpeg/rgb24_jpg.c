@@ -1,13 +1,13 @@
 #include "rgb24_jpg.h"
 
-int rgb24_to_jpeg(uint8_t* img, const char* filename, int width, int height, int quality)
+void rgb24_to_jpeg(uint8_t* img, const char* filename, int width, int height, int quality)
 {
     struct jpeg_compress_struct cinfo;
     struct jpeg_error_mgr jerr;
     FILE* img_jpg;
     if ((img_jpg = fopen(filename, "wb")) == NULL) {
         printf("can't open %s\n", filename);
-        return -1;
+        // return -1;
     }
 
     JSAMPROW row_pointer[1];

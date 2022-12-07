@@ -20,17 +20,17 @@ BIN_DIR = ../../../bin/picture_processing
 SRC_DIR = .
 LDFLAG += -Wl,-gc-sections
 
-all: $(BIN_DIR)/sample_converter
+all: sample_converter
 
-$(BIN_DIR)/sample_converter: $(BUILD_DIR)/nv12_rgb24.o $(BUILD_DIR)/sample_converter.o $(SRC_DIR)/nv12_rgb24.h
-	$(CC) -o $@ $^ $(LDFLAG) $(CFLAGS) $(LIBS) -lpthread -lm -lrt -static
+sample_converter: nv12_rgb24.o sample_converter.o nv12_rgb24.h
+	$(CC) -std=c99 -o $@ $^ $(LDFLAG) $(CFLAGS) $(LIBS) -lpthread -lm -lrt -static
 	$(STRIP) $@
 
-$(BUILD_DIR)/nv12_rgb24.o: $(SRC_DIR)/nv12_rgb24.c $(SRC_DIR)/nv12_rgb24.h
-	$(CC) -std=c99 -c $(SRC_DIR)/nv12_rgb24.c $(CFLAGS) -o $(BUILD_DIR)/nv12_rgb24.o
+nv12_rgb24.o: nv12_rgb24.c nv12_rgb24.h
+	$(CC) -std=c99 -c nv12_rgb24.c $(CFLAGS) -o nv12_rgb24.o
 
-$(BUILD_DIR)/sample_converter.o: $(SRC_DIR)/sample_converter.c $(SRC_DIR)/nv12_rgb24.h
-	$(CC) -c $(CFLAGS) $< -o $@
+sample_converter.o: sample_converter.c nv12_rgb24.h
+	$(CC) -std=c99 -c $(CFLAGS) $< -o $@
 
 clean:
 	rm $(BIN_DIR)/* $(BUILD_DIR)/*

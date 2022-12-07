@@ -12,6 +12,6 @@
 
 #define PIXEL_SIZE 3
 
-int rgb24_to_jpeg(uint8_t* img, const char* filename, int width, int height, int quality);
+void rgb24_to_jpeg(uint8_t* img, const char* filename, int width, int height, int quality);
 
 #endif

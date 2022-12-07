@@ -29,4 +29,6 @@ struct chn_conf
 
 int sample_system_init();
 int sample_system_exit();
+int snap_yuv_nv21_init();
 int snap_yuv_nv21(uint8_t **img);
+int snap_yuv_nv21_exit();

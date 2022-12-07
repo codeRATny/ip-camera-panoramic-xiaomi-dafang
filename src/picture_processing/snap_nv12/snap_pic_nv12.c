@@ -22,8 +22,25 @@ int main(int argc, char *argv[])
 
     uint8_t *img = malloc(sizeof(uint8_t) * IMGSIZE);
 
+    if (snap_yuv_nv21_init(&img) != 0)
+    {
+        printf("err1\n");
+        fclose(fp);
+        free(img);
+        return -1;
+    }
+
     if (snap_yuv_nv21(&img) != 0)
     {
+        printf("err2\n");
+        fclose(fp);
+        free(img);
+        return -1;
+    }
+
+    if (snap_yuv_nv21_exit(&img) != 0)
+    {
+        printf("err3\n");
         fclose(fp);
         free(img);
         return -1;

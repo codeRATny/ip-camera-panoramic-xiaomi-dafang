@@ -25,4 +25,4 @@ void nv12_rgb24_std(
     uint32_t width, uint32_t height,
     const uint8_t *Y, const uint8_t *UV, uint32_t Y_stride, uint32_t UV_stride,
     uint8_t *RGB, uint32_t RGB_stride);
-uint8_t *converter(uint8_t *YUV);
+uint8_t *converter1(uint8_t *YUV);

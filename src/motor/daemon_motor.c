@@ -12,11 +12,11 @@
 #include <signal.h>
 #include "motor_daemon.h"
 
-#define MOTOR_DAEMON_LOG_ERR(...) syslog(LOG_ERR, ## __VA_ARGS__)
-//#define DEBUG
+#define MOTOR_DAEMON_LOG_ERR(...) syslog(LOG_ERR, __VA_ARGS__)
+// #define DEBUG
 #ifdef DEBUG
-#define MOTOR_DAEMON_LOG_INFO(...) syslog(LOG_INFO, ## __VA_ARGS__)
-#define MOTOR_DAEMON_LOG_NOTICE(...) syslog(LOG_NOTICE, ## __VA_ARGS__)
+#define MOTOR_DAEMON_LOG_INFO(...) syslog(LOG_INFO, __VA_ARGS__)
+#define MOTOR_DAEMON_LOG_NOTICE(...) syslog(LOG_NOTICE, __VA_ARGS__)
 #else
 #define MOTOR_DAEMON_LOG_INFO(...)
 #define MOTOR_DAEMON_LOG_NOTICE(...)
@@ -78,7 +78,6 @@ motor_context_t motor_ctx = {0};
 
 int create_queue_pic2motor()
 {
-    MOTOR_DAEMON_LOG_INFO(__FUNCTION__);
     motor_ctx.pic2motor_queue = mq_open(PIC2MOTOR_QUEUE, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR, &attributes_for_pic2motor_queue);
     if (motor_ctx.pic2motor_queue == -1)
     {
@@ -90,7 +89,6 @@ int create_queue_pic2motor()
 
 int create_queue_motor2pic()
 {
-    MOTOR_DAEMON_LOG_INFO(__FUNCTION__);
     motor_ctx.motor2pic_queue = mq_open(MOTOR2PIC_QUEUE, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR, &attributes_for_motor2pic_queue);
     if (motor_ctx.motor2pic_queue == -1)
     {
@@ -122,19 +120,19 @@ int get_status()
 
 int send_motor2pic_reply(motor2pic_t *to_send)
 {
-    MOTOR_DAEMON_LOG_INFO(__FUNCTION__);
     to_send->motor_status = get_status();
     if (mq_send(motor_ctx.motor2pic_queue, (char *)to_send, sizeof(motor2pic_t), PRIORITY_OF_QUEUE) == -1)
     {
         MOTOR_DAEMON_LOG_ERR("mq_send motor2pic_queue not success, errno = %d\n", errno);
         return -1;
     }
+    MOTOR_DAEMON_LOG_INFO("я отправил сообщение №%d с действием %d положение мотора = %d Размер отправленного сообщения: %ld", \
+                          to_send->number_of_comand_m2p, to_send->action_m2p, to_send->motor_status, sizeof(motor2pic_t));
     return 0;
 }
 
 int set_movement(pic2motor_t *move_p2m)
 {
-    MOTOR_DAEMON_LOG_INFO(__FUNCTION__);
     motor2pic_t move_m2p = {0};
     motor_steps_t motor_move;
     motor_move.x = 1;
@@ -166,7 +164,6 @@ int set_movement(pic2motor_t *move_p2m)
 
 int calibration(pic2motor_t *calibration_p2m)
 {
-    MOTOR_DAEMON_LOG_INFO(__FUNCTION__);
     motor2pic_t calibration_m2p = {0};
     motor_steps_t motor_move;
     motor_move.x = -1;
@@ -190,35 +187,31 @@ int calibration(pic2motor_t *calibration_p2m)
 
 int receive_pic2motor_request(pic2motor_t *to_receive)
 {
-    MOTOR_DAEMON_LOG_INFO(__FUNCTION__);
     int size_receive = 0;
-    while (done != 1)
+    while(done != 1)
     {
         size_receive = mq_receive(motor_ctx.pic2motor_queue, (char *)to_receive, sizeof(pic2motor_t), NULL);
         if (size_receive < 0)
         {
+            MOTOR_DAEMON_LOG_ERR("размер сообщения < 0, пробую еще раз");
             sleep(3);
             continue;
         }
         if (size_receive != sizeof(pic2motor_t))
         {
+            MOTOR_DAEMON_LOG_ERR("размер сообщения < ожидаемого, пробую еще раз");
             sleep(3);
             continue;
         }
-        if (size_receive == -1)
-        {
-            return -1;
-        }
         break;
     }
-    MOTOR_DAEMON_LOG_INFO("я принял сообщение №%d с действием %d Количество шагов = %d Размер полученного сообщения: %ld ", \
-                          to_receive->number_of_comand_p2m, to_receive->action_p2m, to_receive->make_steps, sizeof(size_receive));
+    MOTOR_DAEMON_LOG_INFO("я принял сообщение №%d с действием %d Количество шагов = %d Размер полученного сообщения: %d ", \
+                          to_receive->number_of_comand_p2m, to_receive->action_p2m, to_receive->make_steps, size_receive);
     return 0;
 }
 
 int pic2motor_request()
 {
-    MOTOR_DAEMON_LOG_INFO(__FUNCTION__);
     while (done != 1)
     {
         pic2motor_t receive_request = {-1};
@@ -271,7 +264,6 @@ void init_queues()
 
 int close_queue()
 {
-    MOTOR_DAEMON_LOG_INFO(__FUNCTION__);
     if (mq_close(motor_ctx.pic2motor_queue) == -1)
     {
         MOTOR_DAEMON_LOG_ERR("mq_close serv_queue not success, errno = %d", errno);

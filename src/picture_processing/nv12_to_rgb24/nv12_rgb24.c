@@ -70,7 +70,7 @@ void nv12_rgb24_std(
     }
 }
 
-uint8_t *converter(uint8_t *YUV)
+uint8_t *converter1(uint8_t *YUV)
 {
     uint8_t *RGB = NULL, *Y = NULL, *U = NULL, *RGBa = NULL, *YUVa = NULL, *Ya = NULL, *Ua = NULL;
     uint32_t width, height;
