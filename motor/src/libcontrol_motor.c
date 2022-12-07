@@ -39,7 +39,7 @@ int send_motor2pic_request(pic2motor_t *to_send)
         return -1;
     }
     PRINT_DEBUG("Я отправил сообщение № %d с командой %d\nКоличество шагов = %d\nРазмер отправленного сообщения: %ld\n", \
-           to_send->number_of_comand_p2m, to_send->action_p2m, to_send->make_steps, sizeof(pic2motor_t));
+                to_send->number_of_comand_p2m, to_send->action_p2m, to_send->make_steps, sizeof(pic2motor_t));
     return 0;
 }
 
@@ -89,7 +89,7 @@ void receive_motor2pic_reply(motor2pic_t *to_receive)
             continue;
         }
         PRINT_DEBUG("я принял сообщение №%d от действия %d\nРазмер полученного сообщения: %ld\n", \
-               to_receive->number_of_comand_m2p, to_receive->action_m2p, sizeof(size_receive));
+                    to_receive->number_of_comand_m2p, to_receive->action_m2p, sizeof(size_receive));
         printf("Текущее положение мотора: %d\n", to_receive->motor_status);
         break;
     }

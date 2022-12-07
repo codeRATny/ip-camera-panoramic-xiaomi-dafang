@@ -55,7 +55,8 @@ typedef enum _motor_status_e
     MOTOR_IS_RUNNING,
 } motor_status_e;
 
-typedef struct  {
+typedef struct  
+{
     int x;
     int y;
     motor_status_e status;
@@ -75,18 +76,9 @@ typedef struct _motor_context_t
 } motor_context_t;
 motor_context_t motor_ctx = {0};
 
-#ifdef DEBUG
-void here_are_am(const char *asker_func_name)
-{
-    printf("я зашел в %s\n", asker_func_name);
-}
-#endif
-
 int create_queue_pic2motor()
 {
-    #ifdef DEBUG
-    here_are_am(__FUNCTION__);
-    #endif
+    MOTOR_DAEMON_LOG_INFO(__FUNCTION__);
     motor_ctx.pic2motor_queue = mq_open(PIC2MOTOR_QUEUE, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR, &attributes_for_pic2motor_queue);
     if (motor_ctx.pic2motor_queue == -1)
     {
@@ -98,9 +90,7 @@ int create_queue_pic2motor()
 
 int create_queue_motor2pic()
 {
-    #ifdef DEBUG
-    here_are_am(__FUNCTION__);
-    #endif
+    MOTOR_DAEMON_LOG_INFO(__FUNCTION__);
     motor_ctx.motor2pic_queue = mq_open(MOTOR2PIC_QUEUE, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR, &attributes_for_motor2pic_queue);
     if (motor_ctx.motor2pic_queue == -1)
     {
@@ -132,9 +122,7 @@ int get_status()
 
 int send_motor2pic_reply(motor2pic_t *to_send)
 {
-    #ifdef DEBUG
-    here_are_am(__FUNCTION__);
-    #endif
+    MOTOR_DAEMON_LOG_INFO(__FUNCTION__);
     to_send->motor_status = get_status();
     if (mq_send(motor_ctx.motor2pic_queue, (char *)to_send, sizeof(motor2pic_t), PRIORITY_OF_QUEUE) == -1)
     {
@@ -146,9 +134,7 @@ int send_motor2pic_reply(motor2pic_t *to_send)
 
 int set_movement(pic2motor_t *move_p2m)
 {
-    #ifdef DEBUG
-    here_are_am(__FUNCTION__);
-    #endif
+    MOTOR_DAEMON_LOG_INFO(__FUNCTION__);
     motor2pic_t move_m2p = {0};
     motor_steps_t motor_move;
     motor_move.x = 1;
@@ -180,9 +166,7 @@ int set_movement(pic2motor_t *move_p2m)
 
 int calibration(pic2motor_t *calibration_p2m)
 {
-    #ifdef DEBUG
-    here_are_am(__FUNCTION__);
-    #endif
+    MOTOR_DAEMON_LOG_INFO(__FUNCTION__);
     motor2pic_t calibration_m2p = {0};
     motor_steps_t motor_move;
     motor_move.x = -1;
@@ -206,11 +190,9 @@ int calibration(pic2motor_t *calibration_p2m)
 
 int receive_pic2motor_request(pic2motor_t *to_receive)
 {
-    #ifdef DEBUG
-    here_are_am(__FUNCTION__);
-    #endif
+    MOTOR_DAEMON_LOG_INFO(__FUNCTION__);
     int size_receive = 0;
-    while(done != 1)
+    while (done != 1)
     {
         size_receive = mq_receive(motor_ctx.pic2motor_queue, (char *)to_receive, sizeof(pic2motor_t), NULL);
         if (size_receive < 0)
@@ -236,9 +218,7 @@ int receive_pic2motor_request(pic2motor_t *to_receive)
 
 int pic2motor_request()
 {
-    #ifdef DEBUG
-    here_are_am(__FUNCTION__);
-    #endif
+    MOTOR_DAEMON_LOG_INFO(__FUNCTION__);
     while (done != 1)
     {
         pic2motor_t receive_request = {-1};
@@ -291,9 +271,7 @@ void init_queues()
 
 int close_queue()
 {
-    #ifdef DEBUG
-    here_are_am(__FUNCTION__);
-    #endif
+    MOTOR_DAEMON_LOG_INFO(__FUNCTION__);
     if (mq_close(motor_ctx.pic2motor_queue) == -1)
     {
         MOTOR_DAEMON_LOG_ERR("mq_close serv_queue not success, errno = %d", errno);
