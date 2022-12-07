@@ -1,3 +1,5 @@
+#pragma once
+
 #include <imp/imp_common.h>
 #include <imp/imp_osd.h>
 #include <imp/imp_framesource.h>
