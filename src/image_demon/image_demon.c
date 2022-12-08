@@ -95,20 +95,12 @@ int main()
             perror("accept");
             break;
         }
-        // Test socket connection, should analyze commands
         char message[100];
         if (recv(client_fd, message, sizeof(message), 0) == -1)
         {
             perror("recv");
             break;
         }
-        strcpy(message, "Hello, world!");
-        if (send(client_fd, message, sizeof(message), 0) == -1)
-        {
-            perror("send");
-            break;
-        }
-        // End of test connection
 
         // Пишем в mqueue команду демону мотора повернуться до упора влево
 
@@ -157,6 +149,13 @@ int main()
         snap_yuv_nv21_exit();
         rgb24_to_jpeg(img_rgb_out, "/root/1.jpg", LIMIT_STEP * PIXEL_COLS, SENSOR_HEIGHT, QUALITY);
         printf("Convert to jpg - ok\n");
+        
+        strcpy(message, "/root/1.jpg");
+        if (send(client_fd, message, sizeof(message), 0) == -1)
+        {
+            perror("send");
+            break;
+        }
 
         close(client_fd);
     }
