@@ -1,12 +1,12 @@
-#ifndef HEAD_MOTOR_H
-#define HEAD_MOTOR_H
+#ifndef _MOTOR_DAEMON_H_
+#define _MOTOR_DAEMON_H_
 
 #define PIC2MOTOR_QUEUE "/Queue_pic2motor"
 #define MOTOR2PIC_QUEUE "/Queue_motor2pic"
 #define MQ_MAX_NUM_OF_MESSAGES 10
 #define PRIORITY_OF_QUEUE 1
 #define SIZE_OF_MESSAGE 128
-#define LIMIT_STEP 1300
+#define LIMIT_STEP 2500
 
 typedef enum _motor_action_e
 {
@@ -30,4 +30,5 @@ typedef struct _pic2motor_t
     int number_of_comand_p2m;
     int make_steps;
 } pic2motor_t;
+
 #endif

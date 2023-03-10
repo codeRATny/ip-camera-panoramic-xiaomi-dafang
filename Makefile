@@ -44,9 +44,6 @@ $(BUILD_PATH)/rgb24_jpg.o: $(MODULES_PATH)/rgb24_to_jpeg/rgb24_jpg.c $(MODULES_P
 $(BUILD_PATH)/nv_12_img.o: $(MODULES_PATH)/snap_nv12/nv_12_img.c $(MODULES_PATH)/snap_nv12/nv_12_img.h
 	$(CC) -g -rdynamic -c $(MODULES_PATH)/snap_nv12/nv_12_img.c -I$(SDK_INC_PATH) $(CFLAGS) -o $(BUILD_PATH)/nv_12_img.o
 
-# $(BUILD_PATH)/message_queue.o: $(SRC_PATH)/image_demon/message_queue.c
-# 	$(CC) -c $(SRC_PATH)/image_demon/message_queue.c $(CFLAGS) -o $(BUILD_PATH)/message_queue.o
-
 $(BUILD_PATH)/image_demon_launcher.o: $(SRC_PATH)/image_demon/image_demon_launcher.c
 	$(CC) -c $(SRC_PATH)/image_demon/image_demon_launcher.c $(CFLAGS) -o $(BUILD_PATH)/image_demon_launcher.o
 

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _NV_12_IMG_H_
+#define _NV_12_IMG_H_
 
 #include <imp/imp_common.h>
 #include <imp/imp_osd.h>
@@ -32,3 +33,5 @@ int sample_system_exit();
 int snap_yuv_nv21_init();
 int snap_yuv_nv21(uint8_t **img);
 int snap_yuv_nv21_exit();
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _NV12_RGB24_H_
+#define _NV12_RGB24_H_
 
 #include <stdint.h>
 #include <stdio.h>
@@ -26,3 +27,5 @@ void nv12_rgb24_std(
     const uint8_t *Y, const uint8_t *UV, uint32_t Y_stride, uint32_t UV_stride,
     uint8_t *RGB, uint32_t RGB_stride);
 uint8_t *converter1(uint8_t *YUV);
+
+#endif

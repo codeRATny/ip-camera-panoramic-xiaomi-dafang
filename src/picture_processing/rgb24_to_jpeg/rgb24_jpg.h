@@ -1,5 +1,5 @@
-#ifndef HEAD_JPEM_H
-#define HEAD_JPEM_H
+#ifndef _RGB24_JPG_H_
+#define _RGB24_JPG_H_
 
 #include "jpeglib/jpeglib.h"
 #include <stdlib.h>

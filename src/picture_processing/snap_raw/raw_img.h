@@ -1,3 +1,6 @@
+#ifndef _RAW_IMG_H_
+#define _RAW_IMG_H_
+
 #include <imp/imp_common.h>
 #include <imp/imp_osd.h>
 #include <imp/imp_framesource.h>
@@ -37,3 +40,5 @@ int img_system_init();
 int img_system_exit();
 int snap_raw_picture_file(const char *filename);
 int snap_raw_picture_memory(uint8_t **img);
+
+#endif
